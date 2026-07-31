@@ -6,6 +6,7 @@ import trimesh
 SUPPORTED_EXTENSIONS = {".obj", ".ply", ".stl", ".glb", ".gltf"}
 Vec3: TypeAlias = tuple[float, float, float]
 MeshMetrics: TypeAlias = tuple[int, int, int]
+AdjacencyList: TypeAlias = list[set[int]]
 def cross(vector_1:Vec3,vector_2:Vec3)->Vec3:
     u1,u2,u3=vector_1
     v1,v2,v3=vector_2
@@ -81,6 +82,46 @@ def print_metrics(metrics: MeshMetrics) -> None:
     print("boundary_edges:", boundary_edges)
     print("nonmanifold_edges:", nonmanifold_edges)
     print("degenerate_faces:", degenerate_faces)
+def build_vertex_adjacency(mesh: trimesh.Trimesh) -> AdjacencyList:
+    faces=mesh.faces
+    n=len(mesh.vertices)
+    adjacency:list[set[int]]=[set()for _ in range(n)]#prepare an array of empty sets
+    for face in faces:
+        va:int=int(face[0])
+        vb:int=int(face[1])
+        vc:int=int(face[2])
+        adjacency[va].add(vb)
+        adjacency[va].add(vc)
+        adjacency[vb].add(va)
+        adjacency[vb].add(vc)
+        adjacency[vc].add(va)
+        adjacency[vc].add(vb)
+    return adjacency
+def DFS_component_size(start_vertex:int,adjacency:AdjacencyList,visited:list[bool])->int:
+    stack:list[int]=[start_vertex]
+    visited[start_vertex]=True
+    size:int=0
+    while stack:
+        vertex=stack.pop()
+        size+=1
+        adjacent:set[int]=adjacency[vertex]
+        for v in adjacent:
+            if visited[v]==False:
+                stack.append(v)
+                visited[v]=True
+    return size
+def compute_component_sizes(mesh: trimesh.Trimesh) -> list[int]:
+    adjacency:AdjacencyList=build_vertex_adjacency(mesh)
+    n=len(mesh.vertices)
+    visited:list[bool]=[False for _ in range(n)]
+    component_sizes:list[int]=[]
+    for index in range(n):
+        if not visited[index]:
+            component_sizes.append(DFS_component_size(index,adjacency,visited))
+    return component_sizes
+def count_connected_components(mesh: trimesh.Trimesh) -> int:
+    component_sizes:list[int]=compute_component_sizes(mesh)
+    return len(component_sizes)
 def main()->None:
     if __name__ == "__main__":
         main()
