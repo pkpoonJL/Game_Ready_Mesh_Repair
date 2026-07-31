@@ -118,10 +118,24 @@ def compute_component_sizes(mesh: trimesh.Trimesh) -> list[int]:
     for index in range(n):
         if not visited[index]:
             component_sizes.append(DFS_component_size(index,adjacency,visited))
+    component_sizes.sort(reverse=True)
     return component_sizes
 def count_connected_components(mesh: trimesh.Trimesh) -> int:
     component_sizes:list[int]=compute_component_sizes(mesh)
     return len(component_sizes)
+def count_tiny_components(component_sizes:list[int],min_vertices:int=10)->int:
+    for index in range(len(component_sizes)):
+        if index==0:
+            continue
+        if component_sizes[index]<min_vertices:
+            return len(component_sizes)-index
+    return 0
+def count_tiny_component_vertices(component_sizes:list[int],min_vertices:int=10)->int:
+    vertices_count:int=0
+    for index in range(1,len(component_sizes)):
+        if component_sizes[index]<min_vertices:
+            vertices_count+=component_sizes[index]
+    return vertices_count
 def main()->None:
     if __name__ == "__main__":
         main()
