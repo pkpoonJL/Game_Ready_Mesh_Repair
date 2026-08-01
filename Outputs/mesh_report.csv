@@ -1,0 +1,5 @@
+filename,vertex_count,face_count,boundary_edges,nonmanifold_edges,degenerate_faces,component_sizes,connected_components,tiny_components,tiny_component_vertices,quality_flag
+model.obj,8,12,0,0,0,8,1,0,0,CLEAN
+model_degenerate_face.obj,11,13,3,0,1,8;3,2,1,3,DEGENERATE_FACE
+model_face_deficit.obj,8,11,3,0,0,8,1,0,0,OPEN_BOUNDARY
+nonmanifold_edge_cube.obj,9,13,2,1,0,9,1,0,0,NON_MANIFOLD

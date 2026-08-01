@@ -3,10 +3,10 @@ from typing import TypeAlias
 from math import sqrt
 import pandas as pd
 import trimesh
-SUPPORTED_EXTENSIONS = {".obj", ".ply", ".stl", ".glb", ".gltf"}
-Vec3: TypeAlias = tuple[float, float, float]
-MeshMetrics: TypeAlias = tuple[int, int, int]
-AdjacencyList: TypeAlias = list[set[int]]
+SUPPORTED_EXTENSIONS={".obj", ".ply", ".stl", ".glb", ".gltf"}
+Vec3: TypeAlias=tuple[float, float, float]
+MeshMetrics: TypeAlias=tuple[int, int, int, list[int], int, int, int ,str]
+AdjacencyList: TypeAlias=list[set[int]]
 def cross(vector_1:Vec3,vector_2:Vec3)->Vec3:
     u1,u2,u3=vector_1
     v1,v2,v3=vector_2
@@ -73,15 +73,51 @@ def count_degenerate_faces(mesh:trimesh.Trimesh, eps:float=1e-12)->int:
             degenerate_face_count+=1
     return degenerate_face_count
 def analyze_mesh(mesh:trimesh.Trimesh,eps:float=1e-12)->MeshMetrics:
-    boundary_edges=count_boundary_edges(mesh)
-    nonmanifold_edges=count_nonmanifold_edges(mesh)
-    degenerate_face_count=count_degenerate_faces(mesh, eps)
-    return boundary_edges,nonmanifold_edges,degenerate_face_count
+    boundary_edges: int = count_boundary_edges(mesh)
+    nonmanifold_edges: int = count_nonmanifold_edges(mesh)
+    degenerate_faces: int = count_degenerate_faces(mesh, eps)
+    component_sizes: list[int] = compute_component_sizes(mesh)
+    connected_components: int = len(component_sizes)
+    tiny_components: int = count_tiny_components(component_sizes, min_vertices=4)
+    tiny_component_vertices: int = count_tiny_component_vertices(component_sizes, min_vertices=4)
+    quality_flag: str = "CLEAN"
+    if nonmanifold_edges > 0:
+        quality_flag:str="NON_MANIFOLD"
+    elif degenerate_faces > 0:
+        quality_flag:str="DEGENERATE_FACE"
+    elif tiny_components > 0:
+        quality_flag:str="TINY_COMPONENT"
+    elif boundary_edges > 0:
+        quality_flag:str="OPEN_BOUNDARY"
+    return (
+        boundary_edges,
+        nonmanifold_edges,
+        degenerate_faces,
+        component_sizes,
+        connected_components,
+        tiny_components,
+        tiny_component_vertices,
+        quality_flag,
+    )
 def print_metrics(metrics: MeshMetrics) -> None:
-    boundary_edges,nonmanifold_edges,degenerate_faces=metrics
+    (
+        boundary_edges,
+        nonmanifold_edges,
+        degenerate_faces,
+        component_sizes,
+        connected_components,
+        tiny_components,
+        tiny_component_vertices,
+        quality_flag,
+    )=metrics
     print("boundary_edges:", boundary_edges)
     print("nonmanifold_edges:", nonmanifold_edges)
     print("degenerate_faces:", degenerate_faces)
+    print("component_sizes:", component_sizes)
+    print("connected_components:", connected_components)
+    print("tiny_components:", tiny_components)
+    print("tiny_component_vertices:", tiny_component_vertices)
+    print("quality_flag:", quality_flag)
 def build_vertex_adjacency(mesh: trimesh.Trimesh) -> AdjacencyList:
     faces=mesh.faces
     n=len(mesh.vertices)
