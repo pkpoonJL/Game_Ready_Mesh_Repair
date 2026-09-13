@@ -1,0 +1,94 @@
+{
+  "dataset": "S7 controlled synthetic decision dataset",
+  "design": "Controlled geometry for deriving and breaking interpretable S7 rules. Semantic labels are intentional experimental labels, not thresholds.",
+  "cases": [
+    {
+      "name": "baseline_cube",
+      "semantic_label": "legitimate",
+      "shape_family": "baseline",
+      "purpose": "Negative control: S5 still has a best cut, but there is no attached defect.",
+      "vertex_count": 866,
+      "face_count": 1728
+    },
+    {
+      "name": "protrusion_small",
+      "semantic_label": "defect_like",
+      "shape_family": "compact_protrusion",
+      "purpose": "Small compact bulb attached through a narrow neck.",
+      "vertex_count": 978,
+      "face_count": 1952
+    },
+    {
+      "name": "protrusion_medium",
+      "semantic_label": "defect_like",
+      "shape_family": "compact_protrusion",
+      "purpose": "Medium compact bulb with the same neck geometry.",
+      "vertex_count": 1098,
+      "face_count": 2192
+    },
+    {
+      "name": "protrusion_large",
+      "semantic_label": "defect_like",
+      "shape_family": "compact_protrusion",
+      "purpose": "Large compact bulb with the same neck geometry.",
+      "vertex_count": 1266,
+      "face_count": 2528
+    },
+    {
+      "name": "appendage_short",
+      "semantic_label": "legitimate",
+      "shape_family": "thin_rod",
+      "purpose": "Short legitimate rod-like appendage.",
+      "vertex_count": 906,
+      "face_count": 1808
+    },
+    {
+      "name": "appendage_medium",
+      "semantic_label": "legitimate",
+      "shape_family": "thin_rod",
+      "purpose": "Medium legitimate rod-like appendage.",
+      "vertex_count": 922,
+      "face_count": 1840
+    },
+    {
+      "name": "appendage_long",
+      "semantic_label": "legitimate",
+      "shape_family": "thin_rod",
+      "purpose": "Long legitimate rod-like appendage.",
+      "vertex_count": 938,
+      "face_count": 1872
+    },
+    {
+      "name": "flat_flap",
+      "semantic_label": "legitimate",
+      "shape_family": "thin_sheet",
+      "purpose": "Legitimate sheet-like appendage; tests rod-vs-sheet geometry handling.",
+      "vertex_count": 1064,
+      "face_count": 2124
+    },
+    {
+      "name": "defect_spike",
+      "semantic_label": "defect_like",
+      "shape_family": "elongated_adversarial",
+      "purpose": "Failure case for any rule that assumes elongated means legitimate.",
+      "vertex_count": 1008,
+      "face_count": 2012
+    },
+    {
+      "name": "legitimate_knob",
+      "semantic_label": "legitimate",
+      "shape_family": "compact_adversarial",
+      "purpose": "Failure case for any rule that assumes compact + weak neck means defect.",
+      "vertex_count": 1098,
+      "face_count": 2192
+    },
+    {
+      "name": "legitimate_compact_boss",
+      "semantic_label": "legitimate",
+      "shape_family": "compact_broad_base",
+      "purpose": "Legitimate compact broad-base feature; tests whether attachment constriction distinguishes blended compact geometry from a narrow-neck compact protrusion.",
+      "vertex_count": 962,
+      "face_count": 1920
+    }
+  ]
+}

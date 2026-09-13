@@ -68,9 +68,17 @@ def count_degenerate_faces(mesh:trimesh.Trimesh, eps:float=1e-12)->int:
         cx,cy,cz=mesh.vertices[ic]
         vector_ab=(bx-ax,by-ay,bz-az)
         vector_ac=(cx-ax,cy-ay,cz-az)
-        area=0.5*norm(cross(vector_ab,vector_ac))
-        if area<eps:
-            degenerate_face_count+=1
+        ab_length: float = norm(vector_ab)
+        ac_length: float = norm(vector_ac)
+        if ab_length == 0.0 or ac_length == 0.0:
+            degenerate_face_count += 1
+            continue
+        normalized_area: float = (
+                norm(cross(vector_ab, vector_ac))
+                / (ab_length * ac_length)
+        )
+        if normalized_area < eps:
+            degenerate_face_count += 1
     return degenerate_face_count
 def analyze_mesh(mesh:trimesh.Trimesh,eps:float=1e-12)->MeshMetrics:
     boundary_edges: int = count_boundary_edges(mesh)
