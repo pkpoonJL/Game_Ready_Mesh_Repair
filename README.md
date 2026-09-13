@@ -68,22 +68,22 @@ The mesh is converted into an unweighted vertex-adjacency graph.
 
 V1 uses the symmetric normalized graph Laplacian:
 
-$$
+```math
 L_{\mathrm{sym}}
 =
 I-D^{-1/2}AD^{-1/2}
-$$
+```
 
 The Fiedler vector is used to generate sweep cuts.
 
 For a candidate partition $S$:
 
-$$
+```math
 \phi(S)
 =
 \frac{|E(S,\bar S)|}
 {\min(\operatorname{vol}(S),\operatorname{vol}(\bar S))}
-$$
+```
 
 Low conductance indicates a graph bottleneck.
 
