@@ -82,7 +82,7 @@ For a candidate partition $S$:
 \phi(S)
 =
 \frac{|E(S,\bar S)|}
-{\min(\operatorname{vol}(S),\operatorname{vol}(\bar S))}
+{\min(\mathrm{vol}(S),\mathrm{vol}(\bar S))}
 ```
 
 Low conductance indicates a graph bottleneck.
